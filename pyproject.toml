@@ -1,11 +1,14 @@
 [tool.poetry]
-name = "fastapi_test"
+name = "fastapi_test_task"
 version = "0.1.0"
 description = "Test task"
 authors = ["barannikovMU <barannikov.mu@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "3.8"
+python = "^3.8.10"
+pymongo = "^4.0.1"
+fastapi = "^0.71.0"
+uvicorn = "^0.17.0"
 
 
 [tool.poetry.dev-dependencies]
