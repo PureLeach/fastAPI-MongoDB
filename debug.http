@@ -1,0 +1,64 @@
+@host = http://localhost:8000
+
+
+
+### POST запрос к API
+POST {{host}}/file/ HTTP/1.1
+content-type: application/json
+
+{
+    "name":"testName1",
+    "priority": 0,
+    "attack" : 3,
+    "algoSpecific": {
+        "freq": 123.01,
+        "stationId": 4,
+        "companionId": 3
+    }
+}
+
+
+
+
+### GET запрос к API
+GET  {{host}}/file/ HTTP/1.1
+content-type: application/json
+
+
+
+
+### GET запрос к API
+GET  {{host}}/file/1/ HTTP/1.1
+content-type: application/json
+
+
+
+
+### PUT запрос к API
+PUT {{host}}/file/1/ HTTP/1.1
+content-type: application/json
+
+{
+    "status": 7
+}
+
+
+
+
+### DELETE запрос к API
+DELETE {{host}}/file/1/ HTTP/1.1
+content-type: application/json
+
+
+
+# ### PATCH запрос к API
+# PATCH {{host}}/file/1/ HTTP/1.1
+# content-type: application/json
+
+# {
+#     "priority": 0
+# }
+
+
+
+

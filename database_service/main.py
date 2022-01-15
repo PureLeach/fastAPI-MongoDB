@@ -1,11 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 
-from api import views
+from api import endpoints
 
 
 app = FastAPI()
-app.include_router(views.router)
+app.include_router(endpoints.router)
 
 
 @app.get("/")
