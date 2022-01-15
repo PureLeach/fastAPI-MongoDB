@@ -4,6 +4,6 @@ from pydantic import BaseModel
 
 
 class FileSchema(BaseModel):
-  name: str
-  author: str
-  content: str
+    name: str
+    author: str
+    content: str
