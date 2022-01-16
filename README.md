@@ -6,7 +6,7 @@ Service (DatabaseService) should serve for CRUD (Create, Read, Update, Delete) o
 
 ## Building
 
-1. Rename the example.env file, which is located in the database_service\core path to back.env
+1. Rename the example.env file which is located in the **database_service\core** path to back.env
 
 2. Use Docker Compose to build an image
 
