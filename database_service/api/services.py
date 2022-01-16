@@ -88,7 +88,7 @@ def get_file(id: str) -> dict:
         return file
 
 
-def update_file(id: str, file_data: dict) -> dict:
+def update_file(id: str, file_data: dict) -> None:
     try:
         file_data: Optional[dict] = collection.find_one_and_update(
             {"_id": ObjectId(id)}, {"$set": file_data}
@@ -111,5 +111,24 @@ def update_file(id: str, file_data: dict) -> dict:
         )
 
 
-def delete_file(id: str) -> bool:
-    pass
+def delete_file(id: str) -> None:
+    try:
+        file_data: Optional[dict] = collection.find_one_and_delete(
+            {"_id": ObjectId(id)}
+        )
+    except InvalidId:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Not a valid ObjectId",
+        )
+    except Exception as e:
+        logger.error(f"Error updating data from mongoDB: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error updating data from mongoDB",
+        )
+    if file_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found",
+        )
