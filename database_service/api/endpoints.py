@@ -33,18 +33,13 @@ def get_all_files():
 
 
 @router.get("/{id}", response_model=FileResponse)
-def get_file(id: int):
-    response: dict = services.get_file()
-    if response:
-        return response
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
-        )
+def get_file(id: str):
+    file_data: dict = services.get_file(id)
+    return file_data
 
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-def update_file(id: int, request: FileRequest):
+def update_file(id: str, request: FileRequest):
     response: dict = services.update_file()
     if response:
         return response
@@ -55,7 +50,7 @@ def update_file(id: int, request: FileRequest):
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_file(id: int):
+def delete_file(id: str):
     response: dict = services.delete_file()
     if response:
         return response

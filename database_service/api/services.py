@@ -55,7 +55,7 @@ def get_all_files() -> List[dict]:
             files.append(file)
         return files
     except Exception as e:
-        logger.error(f"Error writing data to mongoDB: {e}")
+        logger.error(f"Error getting data from mongoDB: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error getting data from mongoDB",
@@ -63,7 +63,23 @@ def get_all_files() -> List[dict]:
 
 
 def get_file(id: str) -> dict:
-    pass
+    try:
+        file: dict = collection.find_one({"_id": ObjectId(id)})
+    except Exception as e:
+        logger.error(f"Error getting data from mongoDB: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error getting data from mongoDB",
+        )
+    if file is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found",
+        )
+    else:
+        file["id"] = str(file["_id"])
+        del file["_id"]
+        return file
 
 
 def update_file(id: str) -> dict:
