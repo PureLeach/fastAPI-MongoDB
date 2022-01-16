@@ -1,5 +1,6 @@
 from datetime import datetime
 import shutil
+import os
 from typing import List, Optional
 import pathlib
 from bson.objectid import ObjectId
@@ -9,7 +10,7 @@ from uuid import uuid4
 
 from fastapi import UploadFile, HTTPException, status
 
-from core.settings import collection, logger
+from core.settings import collection, logger, BASE_DIR
 
 
 def save_file(file: UploadFile) -> dict:
@@ -196,3 +197,12 @@ def delete_file(id: str) -> None:
             status_code=status.HTTP_404_NOT_FOUND,
             detail="File not found",
         )
+    else:
+        delete_file_from_disk(file_data["file_path"])
+
+
+def delete_file_from_disk(file_path: str) -> None:
+    if os.path.isfile(os.path.join(BASE_DIR, file_path)):
+        os.remove(os.path.join(BASE_DIR, file_path))
+    else:
+        logger.error(f"File '{file_path}' doesn't exists")
