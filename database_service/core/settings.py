@@ -1,25 +1,64 @@
 import os
+from pathlib import Path, WindowsPath
+import sys
 
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 from dotenv import load_dotenv
+from loguru import logger
+import yaml
 
 
+BASE_DIR: WindowsPath = Path(__file__).resolve().parent.parent
+
+# Reading all settings
 load_dotenv("back.env")
+with open(os.path.join(BASE_DIR, "core/settings.yaml")) as f:
+    settings: dict = yaml.safe_load(f)["ubuntu"]
 
+
+# Setting up the logger
+log_settings: dict = settings["logs"]
+logger.remove()
+
+# Format of logs to a file
+logger.add(
+    log_settings["directory"],
+    format=log_settings["format"],
+    level=log_settings["level"],
+    rotation=log_settings["rotation"],
+    compression=log_settings["compression"],
+    backtrace=log_settings["backtrace"],
+    diagnose=log_settings["diagnose"],
+    encoding=log_settings["encoding"],
+)
+
+# Format of logs to the terminal
+logger.add(
+    sys.stdout,
+    format=log_settings["format_terminal"],
+    level=log_settings["level"],
+    backtrace=log_settings["backtrace"],
+    diagnose=log_settings["diagnose"],
+    colorize=True,
+)
+
+
+# Connecting to MongoDB
+mongo_settings: dict = settings["mongoDB"]
 client: MongoClient = MongoClient(
-    host=os.getenv("MONGO_HOST", "localhost"),
-    port=int(os.getenv("MONGO_PORT", 27017)),
+    host=mongo_settings["host"],
+    port=mongo_settings["port"],
     username=os.getenv("MONGO_USER", "root"),
     password=os.getenv("MONGO_PASSWORD", "rootpassword"),
-    serverSelectionTimeoutMS=10,
-    connectTimeoutMS=20000,
+    serverSelectionTimeoutMS=mongo_settings["serverSelectionTimeoutMS"],
+    connectTimeoutMS=mongo_settings["connectTimeoutMS"],
 )
 
 try:
     info: dict = client.server_info()
 except ServerSelectionTimeoutError:
-    print("server is down!!!!")
+    logger.error("Connection error to MongoDB")
 
-db: object = client["My_test_db"]
-collection: object = db["test-collection"]
+db: object = client[mongo_settings["db"]]
+collection: object = db[mongo_settings["collection"]]

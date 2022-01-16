@@ -1,0 +1,18 @@
+ubuntu:
+  logs:
+    directory: "logs/backend.log"
+    format: "{time:DD/MM/YYYY HH:mm:ss} | {name}:{function}:{line} | {level} | {message}"
+    format_terminal: "<green>{time:DD/MM/YYYY HH:mm:ss}</green> | <level>{level}</level> | <level>{message}</level>"
+    level: DEBUG
+    rotation: 10 MB
+    compression: zip
+    backtrace: True
+    diagnose: True
+    encoding: utf-8
+  mongoDB:
+    host: 127.0.0.1
+    port: 27017
+    serverSelectionTimeoutMS: 10
+    connectTimeoutMS: 20000
+    db: service
+    collection: files
