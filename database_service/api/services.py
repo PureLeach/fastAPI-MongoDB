@@ -1,12 +1,11 @@
-from datetime import datetime
-import shutil
 import os
-from typing import List, Optional
 import pathlib
+import shutil
+from typing import List, Optional
+from datetime import datetime
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from uuid import uuid4
-
 
 from fastapi import UploadFile, HTTPException, status
 
@@ -202,6 +201,11 @@ def delete_file(id: str) -> None:
 
 
 def delete_file_from_disk(file_path: str) -> None:
+    """Deleting a file from the file system
+
+    Args:
+        file_path (str): Relative path to the file
+    """
     if os.path.isfile(os.path.join(BASE_DIR, file_path)):
         os.remove(os.path.join(BASE_DIR, file_path))
     else:
