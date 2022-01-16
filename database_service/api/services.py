@@ -3,6 +3,7 @@ import shutil
 from typing import List, Optional
 import pathlib
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 from uuid import uuid4
 
 
@@ -64,7 +65,12 @@ def get_all_files() -> List[dict]:
 
 def get_file(id: str) -> dict:
     try:
-        file: dict = collection.find_one({"_id": ObjectId(id)})
+        file: Optional[dict] = collection.find_one({"_id": ObjectId(id)})
+    except InvalidId:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Not a valid ObjectId",
+        )
     except Exception as e:
         logger.error(f"Error getting data from mongoDB: {e}")
         raise HTTPException(
@@ -82,8 +88,27 @@ def get_file(id: str) -> dict:
         return file
 
 
-def update_file(id: str) -> dict:
-    pass
+def update_file(id: str, file_data: dict) -> dict:
+    try:
+        file_data: Optional[dict] = collection.find_one_and_update(
+            {"_id": ObjectId(id)}, {"$set": file_data}
+        )
+    except InvalidId:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Not a valid ObjectId",
+        )
+    except Exception as e:
+        logger.error(f"Error updating data from mongoDB: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error updating data from mongoDB",
+        )
+    if file_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found",
+        )
 
 
 def delete_file(id: str) -> bool:

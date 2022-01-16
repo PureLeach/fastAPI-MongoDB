@@ -38,23 +38,13 @@ def get_file(id: str):
     return file_data
 
 
-@router.put("/{id}", status_code=status.HTTP_200_OK)
+@router.put("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def update_file(id: str, request: FileRequest):
-    response: dict = services.update_file()
-    if response:
-        return response
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
-        )
+    services.update_file(id, request.dict())
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_file(id: str):
-    response: dict = services.delete_file()
-    if response:
-        return response
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
-        )
+    services.delete_file(id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
