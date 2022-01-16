@@ -3,7 +3,7 @@ from pathlib import Path, WindowsPath
 import sys
 
 from pymongo import MongoClient
-from pymongo.errors import ServerSelectionTimeoutError
+from pymongo.errors import ServerSelectionTimeoutError, OperationFailure
 from dotenv import load_dotenv
 from loguru import logger
 import yaml
@@ -12,7 +12,7 @@ import yaml
 BASE_DIR: WindowsPath = Path(__file__).resolve().parent.parent
 
 # Reading all settings
-load_dotenv("back.env")
+load_dotenv(os.path.join(BASE_DIR, "core/back.env"))
 with open(os.path.join(BASE_DIR, "core/settings.yaml")) as f:
     settings: dict = yaml.safe_load(f)["ubuntu"]
 
@@ -57,8 +57,8 @@ client: MongoClient = MongoClient(
 
 try:
     info: dict = client.server_info()
-except ServerSelectionTimeoutError:
-    logger.error("Connection error to MongoDB")
+except (ServerSelectionTimeoutError, OperationFailure) as e:
+    logger.error(f"Connection error to MongoDB: {e}")
 
 db: object = client[mongo_settings["db"]]
 collection: object = db[mongo_settings["collection"]]
