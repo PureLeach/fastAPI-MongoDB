@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "fastapi_test_task"
+name = "database_service"
 version = "0.1.0"
-description = "Test task"
+description = ""
 authors = ["barannikovMU <barannikov.mu@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8.10"
+python = "^3.8"
 pymongo = "^4.0.1"
 fastapi = "^0.71.0"
 uvicorn = "^0.17.0"
@@ -13,7 +13,6 @@ python-multipart = "^0.0.5"
 python-dotenv = "^0.19.2"
 loguru = "^0.5.3"
 PyYAML = "^6.0"
-
 
 [tool.poetry.dev-dependencies]
 black = {version = "^21.12b0", allow-prereleases = true}
