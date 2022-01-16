@@ -1,8 +1,6 @@
-from typing import List
 import shutil
-from datetime import datetime, time, timedelta
 import random
-from uuid import UUID
+from typing import List
 
 from fastapi import (
     APIRouter,
@@ -15,6 +13,7 @@ from fastapi import (
     File,
 )
 
+from . import services
 from .schemas import FileSchema
 
 
@@ -30,22 +29,32 @@ def create_file(request: FileSchema = Depends(), file: UploadFile = File(...)):
 
 @router.get("/")
 def get_all_files():
-    return "Read all files"
+    response: List[dict] = services.get_all_files()
+    return response
 
 
 @router.get("/{id}")
-def get_file(id: int, response: Response):
-    if id < 5:
-        return f"Read one file {id}"
+def get_file(id: int):
+    response: dict = services.get_file()
+    if response:
+        return response
     else:
         raise HTTPException(status_code=404, detail="File not found")
 
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 def update_file(id: int, request: FileSchema):
-    return request
+    response: dict = services.update_file()
+    if response:
+        return response
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_file(id: int):
-    return f"Delete file {id}"
+    response: dict = services.delete_file()
+    if response:
+        return response
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
