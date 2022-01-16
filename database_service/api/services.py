@@ -46,7 +46,7 @@ def save_file(file: UploadFile) -> dict:
         )
 
 
-def post_file(file_data: dict) -> str:
+def create_file(file_data: dict) -> str:
     """Saving file data to a database
 
     Args:

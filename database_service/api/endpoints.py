@@ -22,7 +22,7 @@ router = APIRouter(prefix="/file", tags=["file"])
 def create_file(request: FileRequest = Depends(), file: UploadFile = File(...)):
     file_metadata: dict = services.save_file(file)
     file_data: dict = {**request.dict(), **file_metadata}
-    file_id: str = services.post_file(file_data)
+    file_id: str = services.create_file(file_data)
     return {"id": file_id, **file_data}
 
 
