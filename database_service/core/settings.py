@@ -14,7 +14,7 @@ BASE_DIR: WindowsPath = Path(__file__).resolve().parent.parent
 # Reading all settings
 load_dotenv(os.path.join(BASE_DIR, "core/back.env"))
 with open(os.path.join(BASE_DIR, "core/settings.yaml")) as f:
-    settings: dict = yaml.safe_load(f)["ubuntu"]
+    settings: dict = yaml.safe_load(f)[os.getenv('OS_SHELL', 'docker')]
 
 
 # Setting up the logger

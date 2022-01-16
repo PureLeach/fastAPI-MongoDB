@@ -16,3 +16,21 @@ ubuntu:
     connectTimeoutMS: 20000
     db: service
     collection: files
+docker:
+  logs:
+    directory: "logs/backend.log"
+    format: "{time:DD/MM/YYYY HH:mm:ss} | {name}:{function}:{line} | {level} | {message}"
+    format_terminal: "<green>{time:DD/MM/YYYY HH:mm:ss}</green> | <level>{level}</level> | <level>{message}</level>"
+    level: DEBUG
+    rotation: 10 MB
+    compression: zip
+    backtrace: True
+    diagnose: True
+    encoding: utf-8
+  mongoDB:
+    host: mongodb
+    port: 27017
+    serverSelectionTimeoutMS: 1000
+    connectTimeoutMS: 20000
+    db: service
+    collection: files
