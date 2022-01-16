@@ -1,11 +1,10 @@
-from lib2to3.pgen2.token import OP
+from datetime import datetime
 import shutil
 from typing import List, Optional
 import pathlib
 from bson.objectid import ObjectId
-from uuid import UUID, uuid4
-import random
-import datetime
+from uuid import uuid4
+
 
 from fastapi import UploadFile, HTTPException, status
 
@@ -19,16 +18,32 @@ def save_file(file: UploadFile) -> dict:
         file_path: str = f"data/{file_uuid + file_extension}"
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        file_info: dict = {"file_uuid": file_uuid, "file_name": file.filename, "file_path": file_path, "user_id": str(uuid4())}
-        return file_info
+        file_metadata: dict = {
+            "file_uuid": file_uuid,
+            "file_name": file.filename,
+            "file_path": file_path,
+            "upload_time": datetime.utcnow(),
+            "user_id": str(uuid4()),
+        }
+        return file_metadata
     except Exception as e:
         logger.error(f"Error saving the file to disk: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error saving the file to disk")
-    
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error saving the file to disk",
+        )
+
 
 def post_file(file_data: dict) -> str:
-    file_id: ObjectId  = collection.insert_one(file_data).inserted_id
-    return str(file_id)
+    try:
+        _id: ObjectId = collection.insert_one(file_data.copy()).inserted_id
+        return str(_id)
+    except Exception as e:
+        logger.error(f"Error writing data to mongoDB: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error writing data to mongoDB",
+        )
 
 
 def get_all_files() -> List[dict]:
