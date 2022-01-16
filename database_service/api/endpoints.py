@@ -1,5 +1,3 @@
-import shutil
-import random
 from typing import List
 
 from fastapi import (
@@ -14,41 +12,46 @@ from fastapi import (
 )
 
 from . import services
-from .schemas import FileSchema
+from .schemas import FileRequest, FileResponse
 
 
 router = APIRouter(prefix="/file", tags=["file"])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
-def create_file(request: FileSchema = Depends(), file: UploadFile = File(...)):
-    with open(f"data/{random.random()}.png", "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    return {**request.dict(), "file_name": file.filename}
+@router.post("/", response_model=FileResponse, status_code=status.HTTP_201_CREATED)
+def create_file(request: FileRequest = Depends(), file: UploadFile = File(...)):
+    file_metadata: dict = services.save_file(file)
+    file_data: dict = {**request.dict(), **file_metadata}
+    file_id: str = services.post_file(file_data)
+    return {"id": file_id, **file_data}
 
 
-@router.get("/")
+@router.get("/", response_model=List[FileResponse])
 def get_all_files():
-    response: List[dict] = services.get_all_files()
-    return response
+    files_data: List[dict] = services.get_all_files()
+    return files_data
 
 
-@router.get("/{id}")
+@router.get("/{id}", response_model=FileResponse)
 def get_file(id: int):
     response: dict = services.get_file()
     if response:
         return response
     else:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
+        )
 
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-def update_file(id: int, request: FileSchema):
+def update_file(id: int, request: FileRequest):
     response: dict = services.update_file()
     if response:
         return response
     else:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
+        )
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -57,4 +60,6 @@ def delete_file(id: int):
     if response:
         return response
     else:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
+        )
