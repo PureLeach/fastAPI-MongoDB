@@ -1,18 +1,19 @@
 import os
-from pathlib import Path, WindowsPath
+from pathlib import Path
 import sys
 
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError, OperationFailure
-from dotenv import load_dotenv
+from environs import Env
 from loguru import logger
 import yaml
 
 
-BASE_DIR: WindowsPath = Path(__file__).resolve().parent.parent
+BASE_DIR: object = Path(__file__).resolve().parent.parent
 
-# Reading all settings
-load_dotenv(os.path.join(BASE_DIR, "core/back.env"))
+env = Env()
+env.read_env(override=True)
+
 with open(os.path.join(BASE_DIR, "core/settings.yaml")) as f:
     settings: dict = yaml.safe_load(f)[os.getenv('OS_SHELL', 'docker')]
 

@@ -1,10 +1,7 @@
-/.venv
-/.vscode
-db.sqlite3
-back.env
-
 __pycache__/
+/.venv
+.env
+*.sqlite3
 *.log
 *.pid
 *.lock
-.python-version
