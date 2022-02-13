@@ -16,8 +16,8 @@ unix:
   mongoDB:
     host: 127.0.0.1
     port: 27017
-    serverSelectionTimeoutMS: 10
-    connectTimeoutMS: 20000
+    serverSelectionTimeoutMS: 10000
+    connectTimeoutMS: 1000
     db: service
     collection: files
 docker:
@@ -38,7 +38,7 @@ docker:
   mongoDB:
     host: mongodb
     port: 27017
-    serverSelectionTimeoutMS: 1000
-    connectTimeoutMS: 20000
+    serverSelectionTimeoutMS: 10000
+    connectTimeoutMS: 1000
     db: service
     collection: files

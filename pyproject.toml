@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "database_service"
 version = "0.1.0"
-description = ""
-authors = ["barannikovMU <barannikov.mu@gmail.com>"]
+description = "My solution for the test task"
+authors = ["Maxim Barannikov <barannikov.MU@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
