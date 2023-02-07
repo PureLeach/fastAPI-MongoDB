@@ -1,22 +1,63 @@
 [tool.poetry]
-name = "database_service"
+name = "database-service"
 version = "0.1.0"
-description = "My solution for the test task"
-authors = ["Maxim Barannikov <barannikov.MU@gmail.com>"]
+description = ""
+authors = ["maksi.barannikov <maksi.barannikov@x5.ru>"]
+readme = "README.md"
+packages = [{include = "database_service"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-pymongo = "^4.0.1"
-fastapi = "^0.71.0"
-uvicorn = "^0.17.0"
-python-multipart = "^0.0.5"
-loguru = "^0.5.3"
-PyYAML = "^6.0"
-environs = "^9.5.0"
+python = "^3.9"
+fastapi = "0.89.1"
+uvicorn = "0.20.0"
+pymongo = "4.3.3"
+loguru = "0.6.0"
+environs = "9.5.0"
+python-multipart = "0.0.5"
 
-[tool.poetry.dev-dependencies]
-black = {version = "^21.12b0", allow-prereleases = true}
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "2.0.0"
+autopep8 = "2.0.1"
+isort = "5.11.4"
+black = "22.6.0"
+flake8 = "6.0.0"
+flake8-bugbear = "22.12.6"
+flake8-quotes = "3.3.2"
+flake8-tidy-imports = "4.8.0"
+flake8-docstrings = "1.6.0"
+flake8-simplify = "0.19.3"
+mypy = "0.961"
+types-python-dateutil = "2.8.19.2"
+types-pytz = "2022.7.1.0"
+pre-commit = "2.21.0"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 120
+skip-string-normalization = '1'
+
+
+[tool.mypy]
+python_version = '3.9'
+show_error_codes = true
+warn_redundant_casts = true
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unreachable = true
+warn_no_return = false
+exclude = [
+    'test',
+    'conftest',
+    'versions',
+]
+
+
+[tool.pydantic-mypy]
+warn_untyped_fields = true
+
