@@ -42,8 +42,6 @@ logger.add(
     colorize=True,
 )
 
-MONGO_USER = env.str('MONGO_USER')
-MONGO_PASSWORD = env.str('MONGO_PASSWORD')
 MONGO_HOST = env.str('MONGO_HOST', default='127.0.0.1')
 MONGO_PORT = env.int('MONGO_PORT', default=27017)
 MONGO_DB = env.str('MONGO_DB', default='service')
@@ -54,8 +52,6 @@ MONGO_TIMEOUT_MS = env.int('MONGO_TIMEOUT_MS', default=10000)
 client: MongoClient = MongoClient(
     host=MONGO_HOST,
     port=MONGO_PORT,
-    username=MONGO_USER,
-    password=MONGO_PASSWORD,
     serverSelectionTimeoutMS=MONGO_TIMEOUT_MS,
     connectTimeoutMS=MONGO_TIMEOUT_MS,
 )

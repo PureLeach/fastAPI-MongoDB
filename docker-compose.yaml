@@ -1,26 +1,12 @@
-version: "3"
+version: '3.7'
 
 services:
-
-  mongodb:
-    image: mongo:latest
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-    ports:
-      - "27017:27017"
-    logging:
-      driver: none
-    volumes:
-      - /private/tmp/docker/mongodb_fastapi_test:/data/db
-    networks:
-      - backend
-
-  database_service:
+  fastapi:
+    container_name: ${COMPOSE_PROJECT_NAME}_fastapi
     build:
-      context: ./database_service
+      context: ./
     command: python3 ./main.py
+    restart: unless-stopped
     volumes:
       - ./database_service:/database_service
     ports:
@@ -29,11 +15,12 @@ services:
       - .env
     logging:
       driver: json-file
-    networks:
-      - backend
     depends_on:
       - mongodb
 
-networks:
-  backend:
-    driver: bridge
+  mongodb:
+    container_name: ${COMPOSE_PROJECT_NAME}_mongodb
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 27017:27017
